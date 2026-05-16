@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FanPulse Live</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root,[data-theme="light"]{
+      --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+      --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+      --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+      --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+      --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+      --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
+      --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;--space-20:5rem;
+      --color-bg:#fff7f7;--color-surface:#ffffff;--color-surface-2:#fff1f1;--color-surface-offset:#f9dada;--color-border:#e6c0c0;--color-divider:#e7d4d4;
+      --color-text:#251616;--color-text-muted:#6c5c5c;--color-text-faint:#a28d8d;--color-text-inverse:#fff7f7;
+      --color-primary:#bc1f1f;--color-primary-hover:#991616;--color-primary-highlight:#f7d4d4;--color-success:#2f7d32;--color-warning:#b96b00;
+      --radius-sm:.5rem;--radius-md:.9rem;--radius-lg:1.2rem;--radius-xl:1.8rem;--radius-full:9999px;
+      --shadow-sm:0 4px 10px rgba(75,16,16,.08);--shadow-md:0 14px 30px rgba(75,16,16,.12);--shadow-lg:0 24px 60px rgba(75,16,16,.16);
+      --font-display:'Oswald', Impact, sans-serif;--font-body:'Inter', system-ui, sans-serif;
+    }
+    [data-theme="dark"]{
+      --color-bg:#120d0d;--color-surface:#1c1515;--color-surface-2:#241b1b;--color-surface-offset:#2b2020;--color-border:#463232;--color-divider:#3a2b2b;
+      --color-text:#f6e9e9;--color-text-muted:#c7b2b2;--color-text-faint:#8e7777;--color-text-inverse:#120d0d;
+      --color-primary:#ef5350;--color-primary-hover:#ff736f;--color-primary-highlight:#432222;--color-success:#70c174;--color-warning:#ffb74d;
+      --shadow-sm:0 4px 10px rgba(0,0,0,.24);--shadow-md:0 14px 30px rgba(0,0,0,.34);--shadow-lg:0 24px 60px rgba(0,0,0,.42);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;background:linear-gradient(180deg,var(--color-bg),var(--color-surface-2));color:var(--color-text)}
+    img,svg{display:block;max-width:100%}
+    button,input{font:inherit}
+    a{color:inherit;text-decoration:none}
+    .skip-link{position:absolute;left:-999px;top:auto}.skip-link:focus{left:1rem;top:1rem;background:var(--color-primary);color:var(--color-text-inverse);padding:.75rem 1rem;border-radius:var(--radius-sm);z-index:1000}
+    .container{width:min(1120px,calc(100% - 2rem));margin-inline:auto}
+    .topbar{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--color-surface) 84%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--color-divider)}
+    .nav{display:flex;justify-content:space-between;align-items:center;padding:.9rem 0;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.8rem;font-weight:800}
+    .brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--color-primary),#ff8f8f);display:grid;place-items:center;color:white;box-shadow:var(--shadow-sm)}
+    .brand svg{width:24px;height:24px}
+    .brand-name{display:flex;flex-direction:column;line-height:1}.brand-name strong{font-family:var(--font-display);font-size:1.25rem;letter-spacing:.04em}.brand-name span{font-size:var(--text-xs);color:var(--color-text-muted)}
+    .nav-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .pill{padding:.7rem 1rem;border-radius:var(--radius-full);border:1px solid var(--color-border);background:var(--color-surface);min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+    .theme-toggle,.btn{cursor:pointer;transition:.2s ease}
+    .btn{border:none;border-radius:var(--radius-full);padding:.95rem 1.2rem;min-height:46px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:.55rem}
+    .btn-primary{background:var(--color-primary);color:var(--color-text-inverse);box-shadow:var(--shadow-sm)}.btn-primary:hover{background:var(--color-primary-hover);transform:translateY(-1px)}
+    .btn-secondary{background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border)}
+    .hero{padding:var(--space-12) 0 var(--space-8)}
+    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--space-8);align-items:center}
+    .eyebrow{display:inline-flex;align-items:center;gap:.55rem;padding:.45rem .8rem;border-radius:var(--radius-full);background:var(--color-primary-highlight);color:var(--color-primary);font-weight:700;font-size:var(--text-xs);letter-spacing:.04em;text-transform:uppercase}
+    h1,h2,h3{margin:0;line-height:1.08}
+    h1{font-family:var(--font-display);font-size:var(--text-2xl);letter-spacing:.02em;text-transform:uppercase;max-width:12ch}
+    .hero p{max-width:58ch;color:var(--color-text-muted);margin:1rem 0 1.4rem}
+    .hero-actions{display:flex;gap:.8rem;flex-wrap:wrap}
+    .hero-card,.panel,.feature-card,.prediction-card,.feed-card,.poll-card,.leader-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}
+    .hero-card{padding:1.2rem;display:grid;gap:1rem}
+    .score-head,.dual{display:flex;justify-content:space-between;align-items:center;gap:1rem}.dual{flex-wrap:wrap}
+    .live-dot{width:.7rem;height:.7rem;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 8px rgba(255,59,48,.14)}
+    .score-box{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;padding:1rem;border-radius:1.2rem;background:var(--color-surface-2)}
+    .team{display:grid;justify-items:center;gap:.5rem}.team-badge{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;font-family:var(--font-display);font-size:1.3rem;background:var(--color-primary-highlight);color:var(--color-primary)}
+    .score{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);letter-spacing:.05em}
+    .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}.stat{padding:1rem;border-radius:1rem;background:var(--color-surface-2)}.stat strong{display:block;font-size:var(--text-lg)}.muted{color:var(--color-text-muted)}
+    section{padding:var(--space-8) 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}.section-head p{margin:0;color:var(--color-text-muted)}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.feature-card{padding:1.2rem}.feature-card h3{font-size:1.1rem;margin:.8rem 0 .45rem}.icon-chip{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--color-primary-highlight);color:var(--color-primary)}
+    .experience-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem}
+    .panel{padding:1.2rem}
+    .tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}.tab{padding:.7rem 1rem;border-radius:var(--radius-full);border:1px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;min-height:44px}.tab.active{background:var(--color-primary);color:var(--color-text-inverse);border-color:var(--color-primary)}
+    .hidden{display:none !important}
+    .poll-options,.reactions,.prediction-controls,.leaderboard{display:grid;gap:.8rem}
+    .poll-option{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem;border-radius:1rem;background:var(--color-surface-2);border:1px solid transparent;cursor:pointer;min-height:56px}.poll-option.active{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+    .bar{height:10px;border-radius:999px;background:var(--color-surface-offset);overflow:hidden}.bar > span{display:block;height:100%;background:var(--color-primary);border-radius:999px}
+    .reaction-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}.reaction-btn{padding:1rem .75rem;border-radius:1rem;border:1px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;min-height:72px}.reaction-btn strong{display:block;font-size:1.2rem}
+    .prediction-range{width:100%}
+    .prediction-card{padding:1rem;background:var(--color-surface-2)}
+    .feed{display:grid;gap:.9rem}.feed-card{padding:1rem 1rem 1rem 1.1rem;border-left:4px solid var(--color-primary)}
+    .feed-time{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-faint)}
+    .leader-card{padding:1rem}.leaderboard li{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--color-divider)}.leaderboard li:last-child{border-bottom:none}
+    .cta{padding-bottom:var(--space-12)}
+    .cta-box{padding:1.5rem;border-radius:2rem;background:linear-gradient(135deg,var(--color-primary),#d84b4b);color:white;box-shadow:var(--shadow-lg)}
+    .cta-box p{max-width:58ch;color:rgba(255,255,255,.84)}
+    .code-block{margin-top:1rem;padding:1rem;border-radius:1rem;background:#140b0b;color:#ffe4e4;overflow:auto;font-size:.92rem}
+    .footer{padding:0 0 2rem;color:var(--color-text-muted);font-size:var(--text-sm)}
+    @media (max-width: 920px){.hero-grid,.experience-grid,.features{grid-template-columns:1fr}.score-box{grid-template-columns:1fr}.score{margin:.5rem 0}.reaction-row{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width: 560px){.container{width:min(100% - 1rem,1120px)}.nav{align-items:flex-start;flex-direction:column}.nav-actions{width:100%}.hero{padding-top:var(--space-8)}.mini-stats{grid-template-columns:1fr}.reaction-row{grid-template-columns:1fr}.hero-actions,.dual{align-items:stretch}.btn,.pill,.tab{width:100%}.cta-box{border-radius:1.4rem}}
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="container nav">
+      <div class="brand" aria-label="FanPulse Live logo">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="8"></circle>
+            <path d="M8 7c2 1 6 1 8 0M8 17c2-1 6-1 8 0M12 4c2 3 2 13 0 16"></path>
+          </svg>
+        </div>
+        <div class="brand-name"><strong>FanPulse</strong><span>Second-screen sports engagement</span></div>
+      </div>
+      <div class="nav-actions">
+        <a class="pill" href="#features">Features</a>
+        <a class="pill" href="#demo">Live demo</a>
+        <button class="pill theme-toggle" data-theme-toggle aria-label="Switch theme">🌙</button>
+        <a class="btn btn-primary" href="#code">Get code</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Live sports challenge solution</span>
+          <h1>Turn passive match viewers into active fans</h1>
+          <p>FanPulse Live is a user-friendly website system that works like a second-screen experience for cricket, football, or any live sporting event. It combines live polls, instant reactions, score prediction, and a momentum feed so fans feel involved while the match unfolds.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#demo">Open interactive demo</a>
+            <a class="btn btn-secondary" href="#code">See source code</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Match preview card">
+          <div class="score-head">
+            <div>
+              <strong>IPL Fan Mode</strong>
+              <div class="muted">Chennai vs Mumbai • 18.4 overs</div>
+            </div>
+            <div class="dual"><span class="live-dot" aria-hidden="true"></span><strong>LIVE</strong></div>
+          </div>
+          <div class="score-box">
+            <div class="team">
+              <div class="team-badge">CSK</div>
+              <strong>Chennai</strong>
+            </div>
+            <div>
+              <div class="score">176/4</div>
+              <div class="muted">Need 12 from 8 balls</div>
+            </div>
+            <div class="team">
+              <div class="team-badge" style="background:#dbe8ff;color:#2347a1;">MI</div>
+              <strong>Mumbai</strong>
+            </div>
+          </div>
+          <div class="mini-stats">
+            <div class="stat"><span class="muted">Fan votes</span><strong id="fanVotes">12,480</strong></div>
+            <div class="stat"><span class="muted">Reactions</span><strong id="reactionTotal">3,921</strong></div>
+            <div class="stat"><span class="muted">Predictions</span><strong id="predictionTotal">1,284</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Core modules</h2>
+            <p>These blocks make the system simple for users and easy to extend for a hackathon or college project.</p>
+          </div>
+        </div>
+        <div class="features">
+          <article class="feature-card">
+            <div class="icon-chip">📊</div>
+            <h3>Live polls</h3>
+            <p class="muted">Ask one-tap questions during key moments, such as next wicket, player of the match, or likely winner.</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon-chip">⚡</div>
+            <h3>Instant reactions</h3>
+            <p class="muted">Let fans send hype, shock, applause, and fire reactions that update in real time on the event page.</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon-chip">🎯</div>
+            <h3>Predictions</h3>
+            <p class="muted">Fans can guess runs, goals, or next big moment and compete on a lightweight leaderboard.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="container experience-grid">
+        <div class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Interactive fan zone</h2>
+              <p>Tap each module to simulate a real second-screen match experience.</p>
+            </div>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Fan modules">
+            <button class="tab active" data-tab="poll" role="tab" aria-selected="true">Poll</button>
+            <button class="tab" data-tab="react" role="tab" aria-selected="false">Reactions</button>
+            <button class="tab" data-tab="predict" role="tab" aria-selected="false">Prediction</button>
+          </div>
+
+          <div id="poll" class="tab-panel">
+            <div class="poll-card">
+              <h3>Who will finish the match?</h3>
+              <p class="muted">Vote once. Bars update immediately to keep the experience lively.</p>
+              <div class="poll-options" id="pollOptions">
+                <button class="poll-option" data-option="Dhoni">
+                  <span>MS Dhoni hits the winning runs</span>
+                  <strong>46%</strong>
+                </button>
+                <div class="bar"><span style="width:46%"></span></div>
+                <button class="poll-option" data-option="Dube">
+                  <span>Shivam Dube finishes it</span>
+                  <strong>34%</strong>
+                </button>
+                <div class="bar"><span style="width:34%"></span></div>
+                <button class="poll-option" data-option="SuperOver">
+                  <span>Match goes to a super over</span>
+                  <strong>20%</strong>
+                </button>
+                <div class="bar"><span style="width:20%"></span></div>
+              </div>
+              <p id="pollMessage" class="muted" aria-live="polite">Select an option to cast your vote.</p>
+            </div>
+          </div>
+
+          <div id="react" class="tab-panel hidden">
+            <div class="poll-card">
+              <h3>How are fans feeling right now?</h3>
+              <p class="muted">Each tap increases the public reaction meter.</p>
+              <div class="reaction-row reactions">
+                <button class="reaction-btn" data-reaction="Hype"><strong>🔥</strong><span>Hype</span><small id="r-hype">1024</small></button>
+                <button class="reaction-btn" data-reaction="Shock"><strong>😮</strong><span>Shock</span><small id="r-shock">811</small></button>
+                <button class="reaction-btn" data-reaction="Clap"><strong>👏</strong><span>Clap</span><small id="r-clap">1267</small></button>
+                <button class="reaction-btn" data-reaction="Nervous"><strong>😬</strong><span>Nervous</span><small id="r-nervous">819</small></button>
+              </div>
+              <p id="reactionMessage" class="muted" aria-live="polite">Tap a reaction to join the crowd.</p>
+            </div>
+          </div>
+
+          <div id="predict" class="tab-panel hidden">
+            <div class="poll-card prediction-controls">
+              <h3>Predict final score</h3>
+              <p class="muted">Move the slider and submit your estimate. This can later connect to a backend leaderboard.</p>
+              <label for="scoreRange">Expected final score: <strong id="scoreValue">188</strong></label>
+              <input id="scoreRange" class="prediction-range" type="range" min="176" max="220" value="188" />
+              <button id="submitPrediction" class="btn btn-primary">Submit prediction</button>
+              <div id="predictionCard" class="prediction-card">Current best community estimate: <strong>189</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Momentum feed</h2>
+              <p>Real-time prompts that keep fans connected to key moments.</p>
+            </div>
+          </div>
+          <div class="feed">
+            <article class="feed-card">
+              <div class="feed-time">18.1 Over</div>
+              <strong>Massive six over long-on</strong>
+              <p class="muted">The crowd reaction spikes. Push a poll asking whether momentum has shifted.</p>
+            </article>
+            <article class="feed-card">
+              <div class="feed-time">18.3 Over</div>
+              <strong>Dot ball under pressure</strong>
+              <p class="muted">Trigger instant reactions and show nervous meter trending upward.</p>
+            </article>
+            <article class="feed-card">
+              <div class="feed-time">18.4 Over</div>
+              <strong>Captain switches the bowler</strong>
+              <p class="muted">Launch a prediction card: can the batter still finish the chase?</p>
+            </article>
+          </div>
+
+          <div class="leader-card" style="margin-top:1rem;">
+            <h3>Top fan predictors</h3>
+            <ul class="leaderboard" role="list">
+              <li><span>1. RaghuFan07</span><strong>92 pts</strong></li>
+              <li><span>2. CoverDriveX</span><strong>88 pts</strong></li>
+              <li><span>3. RedWave11</span><strong>81 pts</strong></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="cta" id="code">
+      <div class="container">
+        <div class="cta-box">
+          <h2>Starter code structure</h2>
+          <p>This project is built as a single-file responsive website, so it is easy to run in a browser and also simple to convert into a Chrome extension popup or a college mini-project with backend APIs.</p>
+          <div class="code-block"><code>fanpulse-live.html
+assets/ (optional icons or screenshots)
+
+Next upgrade ideas:
+1. Connect WebSocket or Firebase for live updates.
+2. Add login and points history.
+3. Convert modules into a browser extension popup.
+4. Store match data in Node.js + MongoDB or Supabase.</code></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">Built as a user-friendly sports engagement system demo with responsive UI, dark mode, interactive voting, reactions, and prediction logic.</div>
+    </footer>
+  </main>
+
+  <script>
+    const html = document.documentElement;
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+    let currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', currentTheme);
+    const syncThemeLabel = () => { themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙'; themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'); };
+    syncThemeLabel();
+    themeToggle.addEventListener('click', () => { currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; html.setAttribute('data-theme', currentTheme); syncThemeLabel(); });
+
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.tab-panel');
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
+      panels.forEach(p => p.classList.add('hidden'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected','true');
+      document.getElementById(tab.dataset.tab).classList.remove('hidden');
+    }));
+
+    const pollMessage = document.getElementById('pollMessage');
+    const fanVotes = document.getElementById('fanVotes');
+    document.querySelectorAll('.poll-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.poll-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        pollMessage.textContent = `You voted for: ${option.dataset.option}. Fan count increased.`;
+        fanVotes.textContent = (12480 + 1).toLocaleString();
+      });
+    });
+
+    const reactionCounts = { hype: 1024, shock: 811, clap: 1267, nervous: 819 };
+    const reactionTotal = document.getElementById('reactionTotal');
+    const reactionMessage = document.getElementById('reactionMessage');
+    document.querySelectorAll('.reaction-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.reaction.toLowerCase();
+        reactionCounts[key] += 1;
+        document.getElementById(`r-${key}`).textContent = reactionCounts[key];
+        const total = Object.values(reactionCounts).reduce((a,b)=>a+b,0);
+        reactionTotal.textContent = total.toLocaleString();
+        reactionMessage.textContent = `${btn.dataset.reaction} reaction sent successfully.`;
+      });
+    });
+
+    const scoreRange = document.getElementById('scoreRange');
+    const scoreValue = document.getElementById('scoreValue');
+    const predictionCard = document.getElementById('predictionCard');
+    const predictionTotal = document.getElementById('predictionTotal');
+    scoreRange.addEventListener('input', () => { scoreValue.textContent = scoreRange.value; });
+    document.getElementById('submitPrediction').addEventListener('click', () => {
+      predictionCard.innerHTML = `Your prediction <strong>${scoreRange.value}</strong> has been recorded. Current best community estimate: <strong>${Math.round((Number(scoreRange.value) + 189)/2)}</strong>`;
+      predictionTotal.textContent = (1284 + 1).toLocaleString();
+    });
+  </script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY fanpulse-live.html /usr/share/nginx/html/index.html
+COPY . /usr/share/nginx/html
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
+ENV PORT=8080
 EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]

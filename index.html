@@ -1,364 +1,1209 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FanPulse Live</title>
+  <title>SportSync AI | Next-Gen Fan Experience</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    :root,[data-theme="light"]{
-      --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
-      --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
-      --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
-      --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
-      --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
-      --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
-      --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;--space-20:5rem;
-      --color-bg:#fff7f7;--color-surface:#ffffff;--color-surface-2:#fff1f1;--color-surface-offset:#f9dada;--color-border:#e6c0c0;--color-divider:#e7d4d4;
-      --color-text:#251616;--color-text-muted:#6c5c5c;--color-text-faint:#a28d8d;--color-text-inverse:#fff7f7;
-      --color-primary:#bc1f1f;--color-primary-hover:#991616;--color-primary-highlight:#f7d4d4;--color-success:#2f7d32;--color-warning:#b96b00;
-      --radius-sm:.5rem;--radius-md:.9rem;--radius-lg:1.2rem;--radius-xl:1.8rem;--radius-full:9999px;
-      --shadow-sm:0 4px 10px rgba(75,16,16,.08);--shadow-md:0 14px 30px rgba(75,16,16,.12);--shadow-lg:0 24px 60px rgba(75,16,16,.16);
-      --font-display:'Oswald', Impact, sans-serif;--font-body:'Inter', system-ui, sans-serif;
+    /* Force Times New Roman globally across all elements */
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: 'Times New Roman', Times, Baskerville, Georgia, serif !important; 
     }
-    [data-theme="dark"]{
-      --color-bg:#120d0d;--color-surface:#1c1515;--color-surface-2:#241b1b;--color-surface-offset:#2b2020;--color-border:#463232;--color-divider:#3a2b2b;
-      --color-text:#f6e9e9;--color-text-muted:#c7b2b2;--color-text-faint:#8e7777;--color-text-inverse:#120d0d;
-      --color-primary:#ef5350;--color-primary-hover:#ff736f;--color-primary-highlight:#432222;--color-success:#70c174;--color-warning:#ffb74d;
-      --shadow-sm:0 4px 10px rgba(0,0,0,.24);--shadow-md:0 14px 30px rgba(0,0,0,.34);--shadow-lg:0 24px 60px rgba(0,0,0,.42);
+
+    /* Default (IPL / Super League) Variables */
+    :root, [data-tournament="ipl"] {
+      --primary: #00f2ff;
+      --secondary: #7000ff;
+      --accent: #ff00c8;
+      --bg: #050505;
+      --surface: rgba(20, 20, 20, 0.7);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+      --text-muted: #a0a0a0;
+      --radius: 20px;
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+      --radial-1: 112, 0, 255;
+      --radial-2: 0, 242, 255;
+      --gradient-logo: linear-gradient(to right, var(--primary), var(--secondary));
     }
-    *,*::before,*::after{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;min-height:100vh;font-family:var(--font-body);font-size:var(--text-base);line-height:1.6;background:linear-gradient(180deg,var(--color-bg),var(--color-surface-2));color:var(--color-text)}
-    img,svg{display:block;max-width:100%}
-    button,input{font:inherit}
-    a{color:inherit;text-decoration:none}
-    .skip-link{position:absolute;left:-999px;top:auto}.skip-link:focus{left:1rem;top:1rem;background:var(--color-primary);color:var(--color-text-inverse);padding:.75rem 1rem;border-radius:var(--radius-sm);z-index:1000}
-    .container{width:min(1120px,calc(100% - 2rem));margin-inline:auto}
-    .topbar{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--color-surface) 84%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--color-divider)}
-    .nav{display:flex;justify-content:space-between;align-items:center;padding:.9rem 0;gap:1rem}
-    .brand{display:flex;align-items:center;gap:.8rem;font-weight:800}
-    .brand-mark{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--color-primary),#ff8f8f);display:grid;place-items:center;color:white;box-shadow:var(--shadow-sm)}
-    .brand svg{width:24px;height:24px}
-    .brand-name{display:flex;flex-direction:column;line-height:1}.brand-name strong{font-family:var(--font-display);font-size:1.25rem;letter-spacing:.04em}.brand-name span{font-size:var(--text-xs);color:var(--color-text-muted)}
-    .nav-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
-    .pill{padding:.7rem 1rem;border-radius:var(--radius-full);border:1px solid var(--color-border);background:var(--color-surface);min-height:44px;display:inline-flex;align-items:center;justify-content:center}
-    .theme-toggle,.btn{cursor:pointer;transition:.2s ease}
-    .btn{border:none;border-radius:var(--radius-full);padding:.95rem 1.2rem;min-height:46px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:.55rem}
-    .btn-primary{background:var(--color-primary);color:var(--color-text-inverse);box-shadow:var(--shadow-sm)}.btn-primary:hover{background:var(--color-primary-hover);transform:translateY(-1px)}
-    .btn-secondary{background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border)}
-    .hero{padding:var(--space-12) 0 var(--space-8)}
-    .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:var(--space-8);align-items:center}
-    .eyebrow{display:inline-flex;align-items:center;gap:.55rem;padding:.45rem .8rem;border-radius:var(--radius-full);background:var(--color-primary-highlight);color:var(--color-primary);font-weight:700;font-size:var(--text-xs);letter-spacing:.04em;text-transform:uppercase}
-    h1,h2,h3{margin:0;line-height:1.08}
-    h1{font-family:var(--font-display);font-size:var(--text-2xl);letter-spacing:.02em;text-transform:uppercase;max-width:12ch}
-    .hero p{max-width:58ch;color:var(--color-text-muted);margin:1rem 0 1.4rem}
-    .hero-actions{display:flex;gap:.8rem;flex-wrap:wrap}
-    .hero-card,.panel,.feature-card,.prediction-card,.feed-card,.poll-card,.leader-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}
-    .hero-card{padding:1.2rem;display:grid;gap:1rem}
-    .score-head,.dual{display:flex;justify-content:space-between;align-items:center;gap:1rem}.dual{flex-wrap:wrap}
-    .live-dot{width:.7rem;height:.7rem;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 8px rgba(255,59,48,.14)}
-    .score-box{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;padding:1rem;border-radius:1.2rem;background:var(--color-surface-2)}
-    .team{display:grid;justify-items:center;gap:.5rem}.team-badge{width:62px;height:62px;border-radius:18px;display:grid;place-items:center;font-family:var(--font-display);font-size:1.3rem;background:var(--color-primary-highlight);color:var(--color-primary)}
-    .score{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);letter-spacing:.05em}
-    .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}.stat{padding:1rem;border-radius:1rem;background:var(--color-surface-2)}.stat strong{display:block;font-size:var(--text-lg)}.muted{color:var(--color-text-muted)}
-    section{padding:var(--space-8) 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap}.section-head p{margin:0;color:var(--color-text-muted)}
-    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.feature-card{padding:1.2rem}.feature-card h3{font-size:1.1rem;margin:.8rem 0 .45rem}.icon-chip{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--color-primary-highlight);color:var(--color-primary)}
-    .experience-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem}
-    .panel{padding:1.2rem}
-    .tabs{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}.tab{padding:.7rem 1rem;border-radius:var(--radius-full);border:1px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;min-height:44px}.tab.active{background:var(--color-primary);color:var(--color-text-inverse);border-color:var(--color-primary)}
-    .hidden{display:none !important}
-    .poll-options,.reactions,.prediction-controls,.leaderboard{display:grid;gap:.8rem}
-    .poll-option{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem;border-radius:1rem;background:var(--color-surface-2);border:1px solid transparent;cursor:pointer;min-height:56px}.poll-option.active{border-color:var(--color-primary);background:var(--color-primary-highlight)}
-    .bar{height:10px;border-radius:999px;background:var(--color-surface-offset);overflow:hidden}.bar > span{display:block;height:100%;background:var(--color-primary);border-radius:999px}
-    .reaction-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}.reaction-btn{padding:1rem .75rem;border-radius:1rem;border:1px solid var(--color-border);background:var(--color-surface-2);cursor:pointer;min-height:72px}.reaction-btn strong{display:block;font-size:1.2rem}
-    .prediction-range{width:100%}
-    .prediction-card{padding:1rem;background:var(--color-surface-2)}
-    .feed{display:grid;gap:.9rem}.feed-card{padding:1rem 1rem 1rem 1.1rem;border-left:4px solid var(--color-primary)}
-    .feed-time{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--color-text-faint)}
-    .leader-card{padding:1rem}.leaderboard li{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--color-divider)}.leaderboard li:last-child{border-bottom:none}
-    .cta{padding-bottom:var(--space-12)}
-    .cta-box{padding:1.5rem;border-radius:2rem;background:linear-gradient(135deg,var(--color-primary),#d84b4b);color:white;box-shadow:var(--shadow-lg)}
-    .cta-box p{max-width:58ch;color:rgba(255,255,255,.84)}
-    .code-block{margin-top:1rem;padding:1rem;border-radius:1rem;background:#140b0b;color:#ffe4e4;overflow:auto;font-size:.92rem}
-    .footer{padding:0 0 2rem;color:var(--color-text-muted);font-size:var(--text-sm)}
-    @media (max-width: 920px){.hero-grid,.experience-grid,.features{grid-template-columns:1fr}.score-box{grid-template-columns:1fr}.score{margin:.5rem 0}.reaction-row{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width: 560px){.container{width:min(100% - 1rem,1120px)}.nav{align-items:flex-start;flex-direction:column}.nav-actions{width:100%}.hero{padding-top:var(--space-8)}.mini-stats{grid-template-columns:1fr}.reaction-row{grid-template-columns:1fr}.hero-actions,.dual{align-items:stretch}.btn,.pill,.tab{width:100%}.cta-box{border-radius:1.4rem}}
+
+    /* UEFA Champions League (UCL) Theme */
+    [data-tournament="ucl"] {
+      --primary: #58a6ff;
+      --secondary: #002b75;
+      --accent: #d4af37; /* Champions Gold */
+      --bg: #020617;
+      --surface: rgba(15, 23, 42, 0.85);
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 20px;
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.9);
+      --radial-1: 0, 82, 204;
+      --radial-2: 212, 175, 55;
+      --gradient-logo: linear-gradient(to right, #58a6ff, #d4af37);
+    }
+
+    /* FIFA World Cup Theme */
+    [data-tournament="worldcup"] {
+      --primary: #ffd700; /* World Cup Gold */
+      --secondary: #800020; /* Qatar Burgundy */
+      --accent: #e65c00; /* Sandy Sun Orange */
+      --bg: #0e0500;
+      --surface: rgba(30, 16, 5, 0.85);
+      --glass: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --text: #fffdf5;
+      --text-muted: #cbbca9;
+      --radius: 20px;
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.95);
+      --radial-1: 128, 0, 32;
+      --radial-2: 255, 215, 0;
+      --gradient-logo: linear-gradient(to right, #ffd700, #ff4500);
+    }
+
+    [data-theme="light"] {
+      --bg: #f0f2f5;
+      --surface: rgba(255, 255, 255, 0.8);
+      --glass: rgba(0, 0, 0, 0.03);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --text: #1a1a1a;
+      --text-muted: #666;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(var(--radial-1), 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(var(--radial-2), 0.1) 0%, transparent 40%);
+      transition: background-color 0.5s ease;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    
+    header {
+      padding: 20px 0;
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .nav { display: flex; justify-content: space-between; align-items: center; }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: var(--gradient-logo);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 1px;
+    }
+
+    .glass-card {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .glass-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 30px;
+      padding: 60px 0;
+    }
+
+    .ai-commentary {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(0, 242, 255, 0.05);
+      border-left: 3px solid var(--primary);
+      border-radius: 4px;
+      font-size: 0.95rem;
+      animation: pulse 4s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.8; }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--secondary);
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .match-card {
+      text-align: center;
+    }
+    .score-display {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 20px 0;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding-bottom: 60px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .stat-item {
+      padding: 15px;
+      background: var(--glass);
+      border-radius: 15px;
+      text-align: center;
+    }
+    .stat-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+
+    .watch-party {
+      display: flex;
+      gap: -10px;
+      margin-top: 15px;
+    }
+    .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      margin-left: -8px;
+    }
+    .avatar:first-child { margin-left: 0; }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-primary { background: linear-gradient(to right, var(--primary), var(--secondary)); color: #000; }
+    .btn-primary:hover { filter: brightness(1.2); }
+
+    .trivia-box {
+      background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(255, 0, 200, 0.1));
+    }
+
+    .emotion-meter {
+      height: 8px;
+      background: var(--glass);
+      border-radius: 4px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    .emotion-fill { height: 100%; background: var(--accent); transition: width 0.5s ease; }
+
+    .feed-item {
+      padding: 15px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .feed-item:last-child { border-bottom: none; }
+
+    /* Breaking News Ticker CSS */
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+      background: var(--surface);
+      border-bottom: 1px solid var(--glass-border);
+      backdrop-filter: blur(15px);
+      display: flex;
+      align-items: center;
+      height: 44px;
+      box-shadow: var(--shadow);
+    }
+    .ticker-title {
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      color: #fff;
+      padding: 0 20px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .ticker-container {
+      width: 100%;
+      overflow: hidden;
+    }
+    .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker-slide 45s linear infinite;
+    }
+    .ticker-item {
+      display: inline-block;
+      padding: 0 40px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .ticker-item strong {
+      color: var(--primary);
+    }
+    @keyframes ticker-slide {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    /* Premium Tournament Selector Style */
+    .tournament-slider-bar {
+      background: rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid var(--glass-border);
+      backdrop-filter: blur(15px);
+    }
+    .tournament-btn {
+      padding: 10px 24px;
+      border-radius: 30px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .tournament-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+      transform: scale(1.04);
+    }
+    .tournament-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #000 !important;
+      font-weight: 800;
+      border-color: transparent;
+      box-shadow: 0 0 20px rgba(var(--radial-2), 0.4);
+    }
+    [data-tournament="ucl"] .tournament-btn.active,
+    [data-tournament="worldcup"] .tournament-btn.active {
+      color: #fff !important;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Floating AI Chatbot Widget Styles */
+    .chatbot-widget {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .chatbot-trigger {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+    .chatbot-trigger:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+    .chatbot-trigger svg {
+      width: 28px;
+      height: 28px;
+      stroke: #000;
+      fill: none;
+    }
+    [data-tournament="ucl"] .chatbot-trigger svg,
+    [data-tournament="worldcup"] .chatbot-trigger svg {
+      stroke: #fff;
+    }
+    .chatbot-trigger .badge {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 18px;
+      height: 18px;
+      background: var(--accent);
+      border-radius: 50%;
+      font-size: 0.65rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      animation: pulse-badge 2s infinite;
+    }
+    @keyframes pulse-badge {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 200, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(255, 0, 200, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 200, 0); }
+    }
+    .chatbot-window {
+      width: 360px;
+      height: 480px;
+      background: var(--surface);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+      transform: scale(0.9) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-origin: bottom right;
+      overflow: hidden;
+    }
+    .chatbot-window.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .chatbot-header {
+      padding: 16px 20px;
+      background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1));
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chatbot-header-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chatbot-status-dot {
+      width: 8px;
+      height: 8px;
+      background: #00ff66;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #00ff66;
+    }
+    .chatbot-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+    .chatbot-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+    .chatbot-close-btn:hover {
+      color: var(--text);
+    }
+    .chatbot-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(0,0,0,0.1);
+    }
+    .chat-msg {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      animation: msg-appear 0.3s ease forwards;
+    }
+    @keyframes msg-appear {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-msg.bot {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      color: var(--text);
+    }
+    .chat-msg.bot.typing {
+      font-style: italic;
+      color: var(--text-muted);
+    }
+    .chat-msg.user {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+      color: #000 !important;
+      font-weight: 700;
+    }
+    [data-tournament="ucl"] .chat-msg.user,
+    [data-tournament="worldcup"] .chat-msg.user {
+      color: #fff !important;
+    }
+    .chatbot-input-area {
+      padding: 15px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      gap: 8px;
+    }
+    .chatbot-input {
+      flex: 1;
+      padding: 10px 15px;
+      border-radius: 30px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .chatbot-input:focus {
+      border-color: var(--primary);
+    }
+    .chatbot-send-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+    }
+    .chatbot-send-btn:hover {
+      transform: scale(1.08);
+    }
+    .chatbot-send-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: #000;
+      fill: none;
+      transform: rotate(45deg);
+    }
+    [data-tournament="ucl"] .chatbot-send-btn svg,
+    [data-tournament="worldcup"] .chatbot-send-btn svg {
+      stroke: #fff;
+    }
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="topbar">
+  <header>
     <div class="container nav">
-      <div class="brand" aria-label="FanPulse Live logo">
-        <div class="brand-mark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="12" cy="12" r="8"></circle>
-            <path d="M8 7c2 1 6 1 8 0M8 17c2-1 6-1 8 0M12 4c2 3 2 13 0 16"></path>
-          </svg>
-        </div>
-        <div class="brand-name"><strong>FanPulse</strong><span>Second-screen sports engagement</span></div>
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        SportSync AI
       </div>
-      <div class="nav-actions">
-        <a class="pill" href="#features">Features</a>
-        <a class="pill" href="#demo">Live demo</a>
-        <button class="pill theme-toggle" data-theme-toggle aria-label="Switch theme">🌙</button>
-        <a class="btn btn-primary" href="#code">Get code</a>
+      <div class="nav-actions" style="display: flex; gap: 15px; align-items: center;">
+        <span style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">● LIVE</span>
+        <button class="btn" id="score-indicator" style="background: var(--glass); color: var(--text); font-weight: bold; transition: all 0.3s;">🏆 Points: 0</button>
       </div>
     </div>
   </header>
 
-  <main id="main">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div>
-          <span class="eyebrow">Live sports challenge solution</span>
-          <h1>Turn passive match viewers into active fans</h1>
-          <p>FanPulse Live is a user-friendly website system that works like a second-screen experience for cricket, football, or any live sporting event. It combines live polls, instant reactions, score prediction, and a momentum feed so fans feel involved while the match unfolds.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#demo">Open interactive demo</a>
-            <a class="btn btn-secondary" href="#code">See source code</a>
-          </div>
-        </div>
-        <aside class="hero-card" aria-label="Match preview card">
-          <div class="score-head">
-            <div>
-              <strong>IPL Fan Mode</strong>
-              <div class="muted">Chennai vs Mumbai • 18.4 overs</div>
-            </div>
-            <div class="dual"><span class="live-dot" aria-hidden="true"></span><strong>LIVE</strong></div>
-          </div>
-          <div class="score-box">
-            <div class="team">
-              <div class="team-badge">CSK</div>
-              <strong>Chennai</strong>
-            </div>
-            <div>
-              <div class="score">176/4</div>
-              <div class="muted">Need 12 from 8 balls</div>
-            </div>
-            <div class="team">
-              <div class="team-badge" style="background:#dbe8ff;color:#2347a1;">MI</div>
-              <strong>Mumbai</strong>
-            </div>
-          </div>
-          <div class="mini-stats">
-            <div class="stat"><span class="muted">Fan votes</span><strong id="fanVotes">12,480</strong></div>
-            <div class="stat"><span class="muted">Reactions</span><strong id="reactionTotal">3,921</strong></div>
-            <div class="stat"><span class="muted">Predictions</span><strong id="predictionTotal">1,284</strong></div>
-          </div>
-        </aside>
+  <!-- Dynamic Tournament Slide Controller -->
+  <div class="tournament-slider-bar">
+    <div class="container" style="display: flex; gap: 15px; justify-content: center; overflow-x: auto; padding: 15px 0;">
+      <button class="tournament-btn active" id="btn-ipl" onclick="switchTournament('ipl')">
+        🏏 IPL 2026 Live
+      </button>
+      <button class="tournament-btn" id="btn-ucl" onclick="switchTournament('ucl')">
+        🏆 UEFA Champions League
+      </button>
+      <button class="tournament-btn" id="btn-worldcup" onclick="switchTournament('worldcup')">
+        ⚽ FIFA World Cup Hub
+      </button>
+    </div>
+  </div>
+
+  <!-- Breaking News Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker-title">💥 BREAKING IPL SQUAD UPDATES</div>
+    <div class="ticker-container">
+      <div class="ticker">
+        <div class="ticker-item">🏏 IPL 2026: <strong>Kuldip Yadav</strong> replaces Khaleel Ahmed</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Richard Gleeson</strong> replaces Nuwan Thushara</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Akash Madhwal</strong> replaces Ayush Mhatre</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Navdeep Saini</strong> replaces Harshit Rana</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Blessing Muzarabani</strong> replaces Mustafizur Rahman</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Keshav Maharaj</strong> replaces Mitchell Santner</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>George Linde</strong> replaces Wanindu Hasaranga</div>
+        <!-- Duplicated for seamless scrolling loop -->
+        <div class="ticker-item">🏏 IPL 2026: <strong>Kuldip Yadav</strong> replaces Khaleel Ahmed</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Richard Gleeson</strong> replaces Nuwan Thushara</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Akash Madhwal</strong> replaces Ayush Mhatre</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Navdeep Saini</strong> replaces Harshit Rana</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Blessing Muzarabani</strong> replaces Mustafizur Rahman</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>Keshav Maharaj</strong> replaces Mitchell Santner</div>
+        <div class="ticker-item">🏏 IPL 2026: <strong>George Linde</strong> replaces Wanindu Hasaranga</div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section id="features">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>Core modules</h2>
-            <p>These blocks make the system simple for users and easy to extend for a hackathon or college project.</p>
+  <main class="container">
+    <section class="hero-grid">
+      <div class="main-stream">
+        <div class="glass-card" style="aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; background: #000; position: relative; overflow: hidden;">
+          <div style="text-align: center;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="var(--primary)">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <p id="stream-subtitle" style="margin-top: 10px; color: var(--text-muted);">Processing Live AI Stream...</p>
           </div>
-        </div>
-        <div class="features">
-          <article class="feature-card">
-            <div class="icon-chip">📊</div>
-            <h3>Live polls</h3>
-            <p class="muted">Ask one-tap questions during key moments, such as next wicket, player of the match, or likely winner.</p>
-          </article>
-          <article class="feature-card">
-            <div class="icon-chip">⚡</div>
-            <h3>Instant reactions</h3>
-            <p class="muted">Let fans send hype, shock, applause, and fire reactions that update in real time on the event page.</p>
-          </article>
-          <article class="feature-card">
-            <div class="icon-chip">🎯</div>
-            <h3>Predictions</h3>
-            <p class="muted">Fans can guess runs, goals, or next big moment and compete on a lightweight leaderboard.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="demo">
-      <div class="container experience-grid">
-        <div class="panel">
-          <div class="section-head">
-            <div>
-              <h2>Interactive fan zone</h2>
-              <p>Tap each module to simulate a real second-screen match experience.</p>
-            </div>
-          </div>
-          <div class="tabs" role="tablist" aria-label="Fan modules">
-            <button class="tab active" data-tab="poll" role="tab" aria-selected="true">Poll</button>
-            <button class="tab" data-tab="react" role="tab" aria-selected="false">Reactions</button>
-            <button class="tab" data-tab="predict" role="tab" aria-selected="false">Prediction</button>
-          </div>
-
-          <div id="poll" class="tab-panel">
-            <div class="poll-card">
-              <h3>Who will finish the match?</h3>
-              <p class="muted">Vote once. Bars update immediately to keep the experience lively.</p>
-              <div class="poll-options" id="pollOptions">
-                <button class="poll-option" data-option="Dhoni">
-                  <span>MS Dhoni hits the winning runs</span>
-                  <strong>46%</strong>
-                </button>
-                <div class="bar"><span style="width:46%"></span></div>
-                <button class="poll-option" data-option="Dube">
-                  <span>Shivam Dube finishes it</span>
-                  <strong>34%</strong>
-                </button>
-                <div class="bar"><span style="width:34%"></span></div>
-                <button class="poll-option" data-option="SuperOver">
-                  <span>Match goes to a super over</span>
-                  <strong>20%</strong>
-                </button>
-                <div class="bar"><span style="width:20%"></span></div>
-              </div>
-              <p id="pollMessage" class="muted" aria-live="polite">Select an option to cast your vote.</p>
-            </div>
-          </div>
-
-          <div id="react" class="tab-panel hidden">
-            <div class="poll-card">
-              <h3>How are fans feeling right now?</h3>
-              <p class="muted">Each tap increases the public reaction meter.</p>
-              <div class="reaction-row reactions">
-                <button class="reaction-btn" data-reaction="Hype"><strong>🔥</strong><span>Hype</span><small id="r-hype">1024</small></button>
-                <button class="reaction-btn" data-reaction="Shock"><strong>😮</strong><span>Shock</span><small id="r-shock">811</small></button>
-                <button class="reaction-btn" data-reaction="Clap"><strong>👏</strong><span>Clap</span><small id="r-clap">1267</small></button>
-                <button class="reaction-btn" data-reaction="Nervous"><strong>😬</strong><span>Nervous</span><small id="r-nervous">819</small></button>
-              </div>
-              <p id="reactionMessage" class="muted" aria-live="polite">Tap a reaction to join the crowd.</p>
-            </div>
-          </div>
-
-          <div id="predict" class="tab-panel hidden">
-            <div class="poll-card prediction-controls">
-              <h3>Predict final score</h3>
-              <p class="muted">Move the slider and submit your estimate. This can later connect to a backend leaderboard.</p>
-              <label for="scoreRange">Expected final score: <strong id="scoreValue">188</strong></label>
-              <input id="scoreRange" class="prediction-range" type="range" min="176" max="220" value="188" />
-              <button id="submitPrediction" class="btn btn-primary">Submit prediction</button>
-              <div id="predictionCard" class="prediction-card">Current best community estimate: <strong>189</strong></div>
+          
+          <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+            <div class="ai-commentary" id="commentary">
+              <span style="color: var(--primary); font-weight: 800; font-size: 0.7rem; display: block; margin-bottom: 4px;">LIVE AI ANALYSIS</span>
+              "The striker's positioning suggests a high probability of a shot from the left flank. Defense is tightening the block."
             </div>
           </div>
         </div>
 
-        <aside class="panel">
-          <div class="section-head">
-            <div>
-              <h2>Momentum feed</h2>
-              <p>Real-time prompts that keep fans connected to key moments.</p>
+        <div class="stats-row" style="margin-top: 25px;">
+          <div class="glass-card">
+            <h4 style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; letter-spacing: 0.5px;">EMOTION ANALYTICS</h4>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span>Excitement</span>
+              <span id="excitement-pct">84%</span>
             </div>
+            <div class="emotion-meter"><div id="excitement-bar" class="emotion-fill" style="width: 84%;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span>Tension</span>
+              <span id="tension-pct">32%</span>
+            </div>
+            <div class="emotion-meter"><div id="tension-bar" class="emotion-fill" style="width: 32%; background: var(--secondary);"></div></div>
           </div>
-          <div class="feed">
-            <article class="feed-card">
-              <div class="feed-time">18.1 Over</div>
-              <strong>Massive six over long-on</strong>
-              <p class="muted">The crowd reaction spikes. Push a poll asking whether momentum has shifted.</p>
-            </article>
-            <article class="feed-card">
-              <div class="feed-time">18.3 Over</div>
-              <strong>Dot ball under pressure</strong>
-              <p class="muted">Trigger instant reactions and show nervous meter trending upward.</p>
-            </article>
-            <article class="feed-card">
-              <div class="feed-time">18.4 Over</div>
-              <strong>Captain switches the bowler</strong>
-              <p class="muted">Launch a prediction card: can the batter still finish the chase?</p>
-            </article>
+          <div class="glass-card">
+            <h4 style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 700; letter-spacing: 0.5px;">REAL-TIME REACTIONS</h4>
+            <div style="display: flex; gap: 10px; justify-content: center; font-size: 1.5rem; padding: 10px 0;">
+              <span style="cursor: pointer;">🔥</span>
+              <span style="cursor: pointer;">👏</span>
+              <span style="cursor: pointer;">😲</span>
+              <span style="cursor: pointer;">🙌</span>
+            </div>
+            <p style="text-align: center; font-size: 0.75rem; color: var(--text-muted);">2.4k fans reacting now</p>
           </div>
-
-          <div class="leader-card" style="margin-top:1rem;">
-            <h3>Top fan predictors</h3>
-            <ul class="leaderboard" role="list">
-              <li><span>1. RaghuFan07</span><strong>92 pts</strong></li>
-              <li><span>2. CoverDriveX</span><strong>88 pts</strong></li>
-              <li><span>3. RedWave11</span><strong>81 pts</strong></li>
-            </ul>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="cta" id="code">
-      <div class="container">
-        <div class="cta-box">
-          <h2>Starter code structure</h2>
-          <p>This project is built as a single-file responsive website, so it is easy to run in a browser and also simple to convert into a Chrome extension popup or a college mini-project with backend APIs.</p>
-          <div class="code-block"><code>fanpulse-live.html
-assets/ (optional icons or screenshots)
-
-Next upgrade ideas:
-1. Connect WebSocket or Firebase for live updates.
-2. Add login and points history.
-3. Convert modules into a browser extension popup.
-4. Store match data in Node.js + MongoDB or Supabase.</code></div>
         </div>
       </div>
+
+      <aside class="sidebar">
+        <div class="glass-card match-card">
+          <div id="match-badge" class="badge">Matchday 24</div>
+          <p id="match-league" style="font-size: 0.9rem; color: var(--text-muted);">Super League Finals</p>
+          <div id="match-score" class="score-display">2 - 1</div>
+          <div style="display: flex; justify-content: space-between; font-weight: 600; letter-spacing: 0.5px;">
+            <span id="team-1">WARRIORS</span>
+            <span id="team-2">TITANS</span>
+          </div>
+          <div class="watch-party">
+            <div class="avatar">JD</div>
+            <div class="avatar">SK</div>
+            <div class="avatar">AM</div>
+            <div class="avatar" style="background: var(--glass);">+12</div>
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 10px; align-self: center;">Watching together</span>
+          </div>
+        </div>
+
+        <div class="glass-card trivia-box" style="margin-top: 20px;">
+          <h4 id="trivia-box-header" style="font-size: 0.8rem; color: var(--primary); margin-bottom: 10px; font-weight: 700; letter-spacing: 0.5px;">AI TRIVIA CHALLENGE</h4>
+          <p id="trivia-question" style="font-weight: 600; font-size: 0.95rem; margin-bottom: 15px;">Who was the first player to score 50 goals in this league?</p>
+          <button id="trivia-opt-a" class="btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.3); color: #fff; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid transparent; transition: all 0.3s;" onclick="submitTriviaAnswer('A')">A. Marcus Veltman</button>
+          <button id="trivia-opt-b" class="btn" style="width: 100%; text-align: left; background: rgba(0,0,0,0.3); color: #fff; font-size: 0.85rem; border: 1px solid transparent; transition: all 0.3s;" onclick="submitTriviaAnswer('B')">B. Leo Santos</button>
+          <div id="trivia-status" style="margin-top: 12px; font-size: 0.8rem; text-align: center; font-weight: bold; display: none;"></div>
+        </div>
+
+        <div class="glass-card" style="margin-top: 20px;">
+          <h4 style="font-size: 0.8rem; color: var(--secondary); margin-bottom: 10px; font-weight: 700; letter-spacing: 0.5px;">FAN POLLS</h4>
+          <p id="poll-question" style="font-size: 0.9rem; margin-bottom: 15px;">Should the referee use VAR for that tackle?</p>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-primary" style="flex: 1;">YES</button>
+            <button class="btn" style="flex: 1; background: var(--glass); color: #fff;">NO</button>
+          </div>
+        </div>
+      </aside>
     </section>
 
-    <footer class="footer">
-      <div class="container">Built as a user-friendly sports engagement system demo with responsive UI, dark mode, interactive voting, reactions, and prediction logic.</div>
-    </footer>
+    <section class="feature-grid">
+      <div class="glass-card">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+          <span style="color: var(--primary);">🎯</span> Match Predictions
+        </h3>
+        <p id="pred-confidence" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px;">AI Confidence: 78%</p>
+        <div style="padding: 15px; background: var(--glass); border-radius: 12px; margin-bottom: 15px;">
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Projected Final Score</p>
+          <p id="pred-score" style="font-size: 1.5rem; font-weight: 800;">3 - 1</p>
+        </div>
+        <button class="btn btn-primary" style="width: 100%;">Place Your Prediction</button>
+      </div>
+
+      <div class="glass-card">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+          <span style="color: var(--accent);">📱</span> Personalized Fan Feed
+        </h3>
+        <div id="fan-feed">
+          <div class="feed-item">
+            <p style="font-size: 0.85rem; font-weight: 600;">IPL 2026 Alert: Kuldip Yadav joins squad as replacement for Khaleel Ahmed</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Delhi Capitals official roster update</p>
+          </div>
+          <div class="feed-item">
+            <p style="font-size: 0.85rem; font-weight: 600;">Player Highlight: Richard Gleeson brings pace depth to squad replacing Nuwan Thushara</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">Matches your squad interest</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <h3 style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+          <span style="color: var(--secondary);">🎮</span> <span id="games-title">Watch Party Games</span>
+        </h3>
+        <p id="games-desc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">3 friends currently playing</p>
+        <button id="games-btn" class="btn" style="width: 100%; background: var(--secondary); color: #fff;">Join Watch Party</button>
+      </div>
+    </section>
   </main>
 
+  <!-- Floating Glassmorphic AI Chatbot Widget -->
+  <div class="chatbot-widget">
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chatbot-header">
+        <div class="chatbot-header-info">
+          <div class="chatbot-status-dot"></div>
+          <div>
+            <div class="chatbot-title">SportSync AI Assistant</div>
+            <div class="chatbot-subtitle" id="chat-bot-subtitle">Online • Analyzing IPL 2026 Feed</div>
+          </div>
+        </div>
+        <button class="chatbot-close-btn" onclick="toggleChatbot()">✕</button>
+      </div>
+      <div class="chatbot-messages" id="chat-messages">
+        <div class="chat-msg bot">👋 Hey! Ask me anything about IPL 2026 squads, injury replacements, or live analysis!</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" class="chatbot-input" id="chat-input" placeholder="Ask AI anything..." onkeypress="handleChatKeyPress(event)">
+        <button class="chatbot-send-btn" onclick="sendChatMessage()">
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <button class="chatbot-trigger" onclick="toggleChatbot()">
+      <div class="badge" id="chat-badge-notif">1</div>
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>
+  </div>
+
   <script>
-    const html = document.documentElement;
-    const themeToggle = document.querySelector('[data-theme-toggle]');
-    let currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    html.setAttribute('data-theme', currentTheme);
-    const syncThemeLabel = () => { themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙'; themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'); };
-    syncThemeLabel();
-    themeToggle.addEventListener('click', () => { currentTheme = currentTheme === 'dark' ? 'light' : 'dark'; html.setAttribute('data-theme', currentTheme); syncThemeLabel(); });
+    // Tournament Hub Data
+    const tournamentData = {
+      ipl: {
+        streamSubtitle: "Processing Live AI Stream...",
+        excitement: 84,
+        tension: 32,
+        matchBadge: "Matchday 24",
+        matchLeague: "Super League Finals",
+        matchScore: "2 - 1",
+        team1: "WARRIORS",
+        team2: "TITANS",
+        triviaQuestion: "Who was the first player to score 50 goals in this league?",
+        triviaOptA: "A. Marcus Veltman",
+        triviaOptB: "B. Leo Santos",
+        triviaCorrect: "A",
+        pollQuestion: "Should the referee use VAR for that tackle?",
+        predConfidence: "78%",
+        predScore: "3 - 1",
+        feed: [
+          { title: "IPL 2026 Alert: Kuldip Yadav joins squad as replacement for Khaleel Ahmed", desc: "Delhi Capitals official roster update" },
+          { title: "Player Highlight: Richard Gleeson brings pace depth to squad replacing Nuwan Thushara", desc: "Matches your squad interest" }
+        ],
+        gamesTitle: "Watch Party Games",
+        gamesDesc: "3 friends currently playing",
+        gamesBtn: "Join Watch Party",
+        commentaries: [
+          "The striker's positioning suggests a high probability of a shot from the left flank. Defense is tightening the block.",
+          "AI Alert: Tension is rising in the stadium. Crowd noise decibels increased by 15% in the last 2 minutes.",
+          "Strategy Change: Titans are pushing their fullbacks higher to exploit space in the final third.",
+          "IPL 2026 Squad Analysis: The entry of Akash Madhwal as replacement for Ayush Mhatre will bring crucial death bowling capabilities.",
+          "Predictive Analysis: Warriors have an 82% chance of keeping a clean sheet in this half.",
+          "IPL 2026 Update: Keshav Maharaj replacing Mitchell Santner is expected to shift spin dynamics significantly."
+        ]
+      },
+      ucl: {
+        streamSubtitle: "UEFA Champions League - Final Phase Live from Budapest...",
+        excitement: 95,
+        tension: 74,
+        matchBadge: "Budapest 2026",
+        matchLeague: "UEFA Champions League Final",
+        matchScore: "0 - 0",
+        team1: "PSG",
+        team2: "ARSENAL",
+        triviaQuestion: "Where is the 2026 UEFA Champions League Final scheduled to take place?",
+        triviaOptA: "A. Puskás Aréna (Budapest)",
+        triviaOptB: "B. Wembley Stadium (London)",
+        triviaCorrect: "A",
+        pollQuestion: "Can Arsenal win their first ever Champions League title tonight?",
+        predConfidence: "86%",
+        predScore: "2 - 1 (Arsenal)",
+        feed: [
+          { title: "EPL Climax: Arsenal leads at 79 pts, Man City at 77 pts as English title race goes to final day on May 24, 2026!", desc: "Gunners are in peak position to lift the trophy" },
+          { title: "La Liga Crowned: FC Barcelona clinches their 29th league championship under Hansi Flick after beating Real Madrid 2-0!", desc: "Second consecutive league win for Flick's team" },
+          { title: "Budapest UCL Final: PSG vs Arsenal set for May 30 at Puskás Aréna with rock legends The Killers performing live!", desc: "Kick-off shifted to early 18:00 CET to capture Asian audiences" }
+        ],
+        gamesTitle: "Budapest 2026 Predictor",
+        gamesDesc: "Compete globally and win exclusive UCL prizes",
+        gamesBtn: "Submit Predictions",
+        commentaries: [
+          "Arsenal is pressing extremely high. Declan Rice is anchoring the middle to intercept PSG's transitions.",
+          "EPL Alert: Arsenal's fine form in the Premier League (79 points) has translated directly to Europe, boosting confidence for Mikel Arteta's squad.",
+          "La Liga Update: Barcelona manager Hansi Flick secures his second consecutive trophy, highlighting Spanish club dominance.",
+          "UEFA coefficient rankings confirm 5 automatic UCL spots for next season's English and Spanish top leagues due to performance spots.",
+          "Historical Stature: Arsenal is aiming to lift their maiden Champions League trophy, ending a 20-year wait since their 2006 heartbreak."
+        ]
+      },
+      worldcup: {
+        streamSubtitle: "FIFA World Cup 2026 - Roster Announcements & Preparations...",
+        excitement: 98,
+        tension: 88,
+        matchBadge: "June 2026",
+        matchLeague: "FIFA World Cup 2026",
+        matchScore: "104 MATCHES",
+        team1: "48 TEAMS",
+        team2: "3 HOSTS",
+        triviaQuestion: "By what date must national associations submit their final 23-26 player rosters to FIFA?",
+        triviaOptA: "A. June 2, 2026",
+        triviaOptB: "B. June 10, 2026",
+        triviaCorrect: "A",
+        pollQuestion: "Will the new 48-team 12-group format make the World Cup more competitive?",
+        predConfidence: "93%",
+        predScore: "Roster Submit Phase",
+        feed: [
+          { title: "FIFA World Cup 2026: USA, Canada, and Mexico stadiums are fully finalized for 104 matches starting June 11!", desc: "Estadio Azteca in Mexico City will host the grand opener" },
+          { title: "Squad Deadline Approaching: Roster submissions are set to lock on June 2 with 23-26 players per team.", desc: "Provisional squads are starting to roll out worldwide" },
+          { title: "US Coordination: White House establishes a dedicated task force to manage logistics for FWC26!", desc: "Special logistics operations underway" }
+        ],
+        gamesTitle: "FWC26 Bracket Challenge",
+        gamesDesc: "Perfect bracket wins $1M USD",
+        gamesBtn: "Build Bracket Now",
+        commentaries: [
+          "FWC26 Update: The new Round of 32 means even third-place teams have a vital shot at survival in the group stages.",
+          "Stadium Spotlight: MetLife Stadium (New York New Jersey Stadium) is preparing to host the monumental World Cup Final.",
+          "Roster Watch: Coaches are making tough final cuts this week. The June 2 squad locks will determine the fates of many top stars.",
+          "Historic Scale: 104 matches across 16 world-class venues will mark this as the largest sporting event ever organized."
+        ]
+      }
+    };
 
-    const tabs = document.querySelectorAll('.tab');
-    const panels = document.querySelectorAll('.tab-panel');
-    tabs.forEach(tab => tab.addEventListener('click', () => {
-      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
-      panels.forEach(p => p.classList.add('hidden'));
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected','true');
-      document.getElementById(tab.dataset.tab).classList.remove('hidden');
-    }));
+    let commentariesList = tournamentData.ipl.commentaries;
+    let commentaryIndex = 0;
+    
+    // Live AI Commentary Loop
+    setInterval(() => {
+      commentaryIndex = (commentaryIndex + 1) % commentariesList.length;
+      const el = document.getElementById('commentary');
+      if (el) {
+        el.style.opacity = 0;
+        setTimeout(() => {
+          el.innerHTML = `<span style="color: var(--primary); font-weight: 800; font-size: 0.7rem; display: block; margin-bottom: 4px;">LIVE AI ANALYSIS</span> "${commentariesList[commentaryIndex]}"`;
+          el.style.opacity = 1;
+        }, 500);
+      }
+    }, 6000);
 
-    const pollMessage = document.getElementById('pollMessage');
-    const fanVotes = document.getElementById('fanVotes');
-    document.querySelectorAll('.poll-option').forEach(option => {
-      option.addEventListener('click', () => {
-        document.querySelectorAll('.poll-option').forEach(o => o.classList.remove('active'));
-        option.classList.add('active');
-        pollMessage.textContent = `You voted for: ${option.dataset.option}. Fan count increased.`;
-        fanVotes.textContent = (12480 + 1).toLocaleString();
-      });
-    });
+    function switchTournament(tournament) {
+      document.body.setAttribute('data-tournament', tournament);
 
-    const reactionCounts = { hype: 1024, shock: 811, clap: 1267, nervous: 819 };
-    const reactionTotal = document.getElementById('reactionTotal');
-    const reactionMessage = document.getElementById('reactionMessage');
-    document.querySelectorAll('.reaction-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const key = btn.dataset.reaction.toLowerCase();
-        reactionCounts[key] += 1;
-        document.getElementById(`r-${key}`).textContent = reactionCounts[key];
-        const total = Object.values(reactionCounts).reduce((a,b)=>a+b,0);
-        reactionTotal.textContent = total.toLocaleString();
-        reactionMessage.textContent = `${btn.dataset.reaction} reaction sent successfully.`;
-      });
-    });
+      // Update active state on buttons
+      document.querySelectorAll('.tournament-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-${tournament}`);
+      if (activeBtn) activeBtn.classList.add('active');
 
-    const scoreRange = document.getElementById('scoreRange');
-    const scoreValue = document.getElementById('scoreValue');
-    const predictionCard = document.getElementById('predictionCard');
-    const predictionTotal = document.getElementById('predictionTotal');
-    scoreRange.addEventListener('input', () => { scoreValue.textContent = scoreRange.value; });
-    document.getElementById('submitPrediction').addEventListener('click', () => {
-      predictionCard.innerHTML = `Your prediction <strong>${scoreRange.value}</strong> has been recorded. Current best community estimate: <strong>${Math.round((Number(scoreRange.value) + 189)/2)}</strong>`;
-      predictionTotal.textContent = (1284 + 1).toLocaleString();
-    });
+      // Add a clean transition fade effect
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        mainElement.style.opacity = '0';
+        mainElement.style.transform = 'translateY(8px)';
+      }
+
+      setTimeout(() => {
+        const data = tournamentData[tournament];
+        
+        // Update labels
+        document.getElementById('stream-subtitle').innerText = data.streamSubtitle;
+        document.getElementById('excitement-pct').innerText = data.excitement + '%';
+        document.getElementById('excitement-bar').style.width = data.excitement + '%';
+        document.getElementById('tension-pct').innerText = data.tension + '%';
+        document.getElementById('tension-bar').style.width = data.tension + '%';
+
+        // Update match card
+        document.getElementById('match-badge').innerText = data.matchBadge;
+        document.getElementById('match-league').innerText = data.matchLeague;
+        document.getElementById('match-score').innerText = data.matchScore;
+        document.getElementById('team-1').innerText = data.team1;
+        document.getElementById('team-2').innerText = data.team2;
+
+        // Update trivia card
+        document.getElementById('trivia-question').innerText = data.triviaQuestion;
+        document.getElementById('trivia-opt-a').innerText = data.triviaOptA;
+        document.getElementById('trivia-opt-b').innerText = data.triviaOptB;
+
+        // Reset and restore trivia question styles
+        const optA = document.getElementById('trivia-opt-a');
+        const optB = document.getElementById('trivia-opt-b');
+        const statusEl = document.getElementById('trivia-status');
+        
+        if (optA && optB && statusEl) {
+          optA.style.background = 'rgba(0,0,0,0.3)';
+          optA.style.borderColor = 'transparent';
+          optB.style.background = 'rgba(0,0,0,0.3)';
+          optB.style.borderColor = 'transparent';
+          statusEl.style.display = 'none';
+          
+          if (typeof answeredTrivia !== 'undefined' && answeredTrivia[tournament]) {
+            statusEl.style.display = 'block';
+            statusEl.style.color = 'var(--text-muted)';
+            statusEl.innerText = "ℹ️ You've already answered this question!";
+            
+            const correctBtn = data.triviaCorrect === 'A' ? optA : optB;
+            correctBtn.style.background = 'rgba(0, 255, 102, 0.15)';
+            correctBtn.style.borderColor = '#00ff66';
+          }
+        }
+
+        // Update fan poll
+        document.getElementById('poll-question').innerText = data.pollQuestion;
+
+        // Update predictions card
+        document.getElementById('pred-confidence').innerText = 'AI Confidence: ' + data.predConfidence;
+        document.getElementById('pred-score').innerText = data.predScore;
+
+        // Update personalized feed list
+        const feedContainer = document.getElementById('fan-feed');
+        if (feedContainer) {
+          feedContainer.innerHTML = '';
+          data.feed.forEach(item => {
+            feedContainer.innerHTML += `
+              <div class="feed-item">
+                <p style="font-size: 0.85rem; font-weight: 600;">${item.title}</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted);">${item.desc}</p>
+              </div>
+            `;
+          });
+        }
+
+        // Update watch party games details
+        document.getElementById('games-title').innerText = data.gamesTitle;
+        document.getElementById('games-desc').innerText = data.gamesDesc;
+        document.getElementById('games-btn').innerText = data.gamesBtn;
+
+        // Update commentary list context
+        commentariesList = data.commentaries;
+        commentaryIndex = 0;
+        const commentaryEl = document.getElementById('commentary');
+        if (commentaryEl) {
+          commentaryEl.innerHTML = `<span style="color: var(--primary); font-weight: 800; font-size: 0.7rem; display: block; margin-bottom: 4px;">LIVE AI ANALYSIS</span> "${commentariesList[0]}"`;
+        }
+
+        // Fade back in
+        if (mainElement) {
+          mainElement.style.opacity = '1';
+          mainElement.style.transform = 'translateY(0)';
+        }
+
+        // Trigger dynamic Chatbot update
+        if (typeof updateChatbotGreeting === 'function') {
+          updateChatbotGreeting(tournament);
+        }
+      }, 250);
+    }
+
+    // Global Points System & Trivia State
+    let fanPoints = 0;
+    const answeredTrivia = { ipl: false, ucl: false, worldcup: false };
+
+    function submitTriviaAnswer(choice) {
+      const activeTournament = document.body.getAttribute('data-tournament') || 'ipl';
+      
+      const statusEl = document.getElementById('trivia-status');
+      if (answeredTrivia[activeTournament]) {
+        if (statusEl) {
+          statusEl.style.display = 'block';
+          statusEl.style.color = 'var(--text-muted)';
+          statusEl.innerText = "⚠️ You have already answered this slide's trivia question!";
+        }
+        return;
+      }
+
+      const data = tournamentData[activeTournament];
+      const correctChoice = data.triviaCorrect || 'A';
+      
+      const optA = document.getElementById('trivia-opt-a');
+      const optB = document.getElementById('trivia-opt-b');
+      
+      if (choice === correctChoice) {
+        fanPoints += 10;
+        answeredTrivia[activeTournament] = true;
+        
+        const correctBtn = choice === 'A' ? optA : optB;
+        correctBtn.style.background = 'rgba(0, 255, 102, 0.2)';
+        correctBtn.style.borderColor = '#00ff66';
+        
+        if (statusEl) {
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#00ff66';
+          statusEl.innerHTML = "✅ Correct! <strong>+10 Points</strong> added to your profile.";
+        }
+
+        // Trigger AI Commentary celebrating the user
+        const commentaryEl = document.getElementById('commentary');
+        if (commentaryEl) {
+          commentaryEl.style.opacity = 0;
+          setTimeout(() => {
+            commentaryEl.innerHTML = `<span style="color: var(--primary); font-weight: 800; font-size: 0.7rem; display: block; margin-bottom: 4px;">LIVE AI ANALYSIS</span> "Spectacular! Fan solved the AI Trivia challenge successfully. +10 Points awarded!"`;
+            commentaryEl.style.opacity = 1;
+          }, 500);
+        }
+      } else {
+        answeredTrivia[activeTournament] = true;
+        
+        const wrongBtn = choice === 'A' ? optA : optB;
+        const correctBtn = choice === 'A' ? optB : optA;
+        
+        wrongBtn.style.background = 'rgba(255, 68, 68, 0.2)';
+        wrongBtn.style.borderColor = '#ff4444';
+        
+        correctBtn.style.background = 'rgba(0, 255, 102, 0.2)';
+        correctBtn.style.borderColor = '#00ff66';
+        
+        if (statusEl) {
+          statusEl.style.display = 'block';
+          statusEl.style.color = '#ff4444';
+          statusEl.innerHTML = "❌ Incorrect! The correct answer was option " + correctChoice + ".";
+        }
+      }
+
+      // Update score indicator
+      const scoreIndicator = document.getElementById('score-indicator');
+      if (scoreIndicator) {
+        scoreIndicator.innerText = "🏆 Points: " + fanPoints;
+        scoreIndicator.style.boxShadow = '0 0 15px rgba(0, 255, 102, 0.4)';
+        setTimeout(() => scoreIndicator.style.boxShadow = 'none', 1000);
+      }
+    }
+
+    // Chatbot Assistant Controller Logic
+    let chatbotOpen = false;
+
+    // Store custom bot greetings for each tournament
+    const botGreetings = {
+      ipl: "👋 Hey! Ask me anything about IPL 2026 squads, injury replacements, or live analysis!",
+      ucl: "👋 Welcome to Budapest! Ask me about Arsenal vs PSG tactical analysis or UCL Final facts!",
+      worldcup: "👋 Welcome to the FIFA World Cup Hub! Ask me about FWC26 roster rules, hosts, or stadiums!"
+    };
+
+    const botSubtitles = {
+      ipl: "Online • Analyzing IPL 2026 Feed",
+      ucl: "Online • Live from Budapest Puskás Aréna",
+      worldcup: "Online • Analyzing FIFA FWC26 Groups"
+    };
+
+    function toggleChatbot() {
+      chatbotOpen = !chatbotOpen;
+      const windowEl = document.getElementById('chatbot-window');
+      const badgeEl = document.getElementById('chat-badge-notif');
+      
+      if (chatbotOpen) {
+        windowEl.classList.add('open');
+        if (badgeEl) badgeEl.style.display = 'none'; // Hide notification badge on click
+        
+        // Auto focus input
+        setTimeout(() => document.getElementById('chat-input').focus(), 150);
+      } else {
+        windowEl.classList.remove('open');
+      }
+    }
+
+    function handleChatKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendChatMessage();
+      }
+    }
+
+    function sendChatMessage() {
+      const inputEl = document.getElementById('chat-input');
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      // Append user message
+      appendMessage(text, 'user');
+      inputEl.value = '';
+
+      // Set bot status to typing simulation
+      const messagesContainer = document.getElementById('chat-messages');
+      const typingEl = document.createElement('div');
+      typingEl.className = 'chat-msg bot typing';
+      typingEl.id = 'bot-typing-indicator';
+      typingEl.innerText = 'AI is writing...';
+      messagesContainer.appendChild(typingEl);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Simulate network lag response
+      setTimeout(() => {
+        // Remove typing indicator
+        const indicator = document.getElementById('bot-typing-indicator');
+        if (indicator) indicator.remove();
+
+        // Get active tournament
+        const activeTournament = document.body.getAttribute('data-tournament') || 'ipl';
+        
+        // Get dynamic response
+        const response = getBotResponse(text.toLowerCase(), activeTournament);
+        appendMessage(response, 'bot');
+      }, 1000);
+    }
+
+    function appendMessage(text, sender) {
+      const messagesContainer = document.getElementById('chat-messages');
+      const msgEl = document.createElement('div');
+      msgEl.className = `chat-msg ${sender}`;
+      msgEl.innerText = text;
+      messagesContainer.appendChild(msgEl);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function getBotResponse(input, tournament) {
+      if (tournament === 'ipl') {
+        if (input.includes('injury') || input.includes('replace') || input.includes('squad') || input.includes('player')) {
+          return "🚨 Real-Time IPL Squad Alert: Due to injuries, Kuldip Yadav has joined Delhi Capitals (replacing Khaleel Ahmed), Richard Gleeson joined as speed depth (replacing Nuwan Thushara), and Keshav Maharaj takes over spin duty from Mitchell Santner!";
+        }
+        if (input.includes('win') || input.includes('warriors') || input.includes('titans') || input.includes('prediction') || input.includes('score')) {
+          return "📊 Predictive Model: Warriors currently hold an 82% defensive clean sheet capability and are projected to secure a 3-1 win, with AI confidence standing high at 78%!";
+        }
+        if (input.includes('poll') || input.includes('tackle') || input.includes('var')) {
+          return "🗳️ Fan Poll: The stadium tension is rising. 67% of fans are currently voting 'YES' that the referee should utilize VAR for that aggressive tackle!";
+        }
+        return "🏏 IPL 2026 Hub AI: I'm tracking live metrics! Ask me about squad injury updates, Matchday 24 Warriors vs Titans tactics, or our AI match projection model!";
+      } 
+      
+      else if (tournament === 'ucl') {
+        if (input.includes('arsenal') || input.includes('gunners') || input.includes('psg') || input.includes('final') || input.includes('who')) {
+          return "🏆 UCL Budapest 2026 Final: Defending champions PSG (eliminating Bayern Munich 6-5 on aggregate) take on Arsenal (first final since 2006!) at the Puskás Aréna. Kick-off is set for an early 18:00 CET to reach Asian fans!";
+        }
+        if (input.includes('ceremony') || input.includes('show') || input.includes('killers') || input.includes('band')) {
+          return "🎸 Pre-Match Entertainment: UEFA has officially locked in the legendary American rock band 'The Killers' to headline the spectacular opening ceremony inside Budapest's Puskás Aréna!";
+        }
+        if (input.includes('premier') || input.includes('epl') || input.includes('city') || input.includes('race') || input.includes('points')) {
+          return "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League title race: Arsenal leads with 79 points, followed closely by Manchester City at 77 points, heading to a thrilling final day conclusion on Sunday, May 24, 2026! Both clubs plus Man United and Aston Villa have already secured their 2026/27 UCL slots.";
+        }
+        if (input.includes('la liga') || input.includes('barcelona') || input.includes('flick') || input.includes('spain')) {
+          return "🇪🇸 La Liga champions: FC Barcelona won their 29th league championship on May 10, 2026, after beating Real Madrid 2-0! Flick secures back-to-back titles. Spain also secured an extra 5th UCL spot alongside England due to coefficient spots.";
+        }
+        if (input.includes('win') || input.includes('prediction') || input.includes('score')) {
+          return "🎯 UCL AI Forecast: Our neural networks suggest a highly contested match with Arsenal holding a slight 86% confidence advantage to secure a historical 2-1 victory over PSG!";
+        }
+        return "🏆 Champions League Final AI: Budapest is electric! Ask me about Arsenal's squad path, PSG's aggregate records, Puskás Aréna seating, or The Killers opening show!";
+      } 
+      
+      else if (tournament === 'worldcup') {
+        if (input.includes('when') || input.includes('schedule') || input.includes('matches') || input.includes('format')) {
+          return "📅 FWC26 Schedule: The tournament spans 39 days from June 11 to July 19, 2026. It introduces an exciting new format featuring 48 teams divided into 12 groups, totaling 104 matches across USA, Canada, and Mexico!";
+        }
+        if (input.includes('roster') || input.includes('squad') || input.includes('players') || input.includes('june 2')) {
+          return "📋 Squad Regulations: All 48 participating associations must freeze and submit their final 23-to-26 player rosters (including 3 goalkeepers) to FIFA by the absolute deadline of June 2, 2026!";
+        }
+        if (input.includes('stadium') || input.includes('venue') || input.includes('azteca') || input.includes('metlife') || input.includes('final')) {
+          return "🏟️ Venues: Estadio Azteca (Mexico City) hosts the opening match on June 11, while New York/New Jersey (MetLife Stadium) will host the historic FWC26 World Cup Final on July 19!";
+        }
+        return "⚽ FWC26 Hub AI: The World Cup kicks off on June 11! Ask me about the 48-team roster lock deadlines, the 16 host stadiums, or the US White House logistics task force!";
+      }
+
+      return "🤖 SportSync AI Assistant: I'm connected to the real-time tournament feed! Ask me specific questions about squads, tactics, live polls, or predictions.";
+    }
+
+    // Call update on tournament switch to append correct message
+    function updateChatbotGreeting(tournament) {
+      const messagesContainer = document.getElementById('chat-messages');
+      const subtitleEl = document.getElementById('chat-bot-subtitle');
+      const badgeEl = document.getElementById('chat-badge-notif');
+      
+      if (subtitleEl) {
+        subtitleEl.innerText = botSubtitles[tournament];
+      }
+
+      if (messagesContainer) {
+        // Only trigger initial greeting updates if user hasn't engaged yet, keeping chat clean
+        messagesContainer.innerHTML = `<div class="chat-msg bot">${botGreetings[tournament]}</div>`;
+      }
+
+      // Show notification badge if the widget is closed when tournament changes
+      if (!chatbotOpen && badgeEl) {
+        badgeEl.style.display = 'flex';
+        badgeEl.innerText = '1';
+      }
+    }
   </script>
 </body>
 </html>

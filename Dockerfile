@@ -1,6 +1,7 @@
-FROM nginx:alpine
-COPY . /usr/share/nginx/html
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-ENV PORT=8080
+FROM node:18
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
 EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "node", "server.js" ]
